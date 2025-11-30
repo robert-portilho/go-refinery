@@ -24,7 +24,7 @@ O fluxo de dados no Go-Refinery segue o padrão **Source -> Processors -> Sink**
 
 ```mermaid
 graph LR
-    A[Source (Kafka)] --> B(Engine)
+    A[Source Kafka] --> B(Engine)
     subgraph Pipeline
     B --> C{Processors}
     C --> D[JSON Parser]
@@ -32,7 +32,7 @@ graph LR
     E --> F[Regex Replace]
     F --> G[Filter]
     end
-    G --> H[Sink (SQL Server)]
+    G --> H[Sink SQL Server]
 ```
 
 ## 📋 Pré-requisitos
