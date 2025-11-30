@@ -1,0 +1,44 @@
+pipeline:
+  worker_count: 200
+  batch_size: 1000
+  batch_timeout: 1s
+  source:
+    type: kafka
+    config:
+      brokers: ["kafka:9092"]
+      topic: "orders"
+      group_id: "order-processor"
+  
+  processors:
+    - type: json_parser
+    
+    - type: rename_field
+      config:
+        mapping:
+          "customer_id": "CustomerID"
+          "total_amount": "Amount"
+
+    - type: regex_replace
+      config:
+        field: "usuario.email"
+        pattern: "(.*)@(.*)"
+        replacement: "***@$2"
+
+    - type: filter
+      config:
+        field: "Amount"
+        operator: ">"
+        value: 0.0
+
+  sink:
+    type: sqlserver
+    config:
+      dsn: "sqlserver://sa:YourStrong!Passw0rd@sqlserver:1433?database=mydb"
+      table: "ProcessedOrders"
+      fields:
+        - source: "CustomerID"
+          target: "customer_id"
+        - source: "Amount"
+          target: "total_value"
+        - source: "usuario.email"
+          target: "email_masked"
