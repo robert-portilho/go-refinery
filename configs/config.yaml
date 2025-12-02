@@ -1,6 +1,6 @@
 pipeline:
-  worker_count: 200
-  batch_size: 1000
+  worker_count: 500
+  batch_size: 10000
   batch_timeout: 1s
   source:
     type: kafka
@@ -31,14 +31,21 @@ pipeline:
         value: 0.0
 
   sink:
-    type: sqlserver
+    # type: sqlserver
+    # config:
+    #   dsn: "sqlserver://sa:YourStrong!Passw0rd@sqlserver:1433?database=mydb"
+    #   table: "ProcessedOrders"
+    #   fields:
+    #     - source: "CustomerID"
+    #       target: "customer_id"
+    #     - source: "Amount"
+    #       target: "total_value"
+    #     - source: "usuario.email"
+    #       target: "email_masked"
+    
+    type: elasticsearch
     config:
-      dsn: "sqlserver://sa:YourStrong!Passw0rd@sqlserver:1433?database=mydb"
-      table: "ProcessedOrders"
-      fields:
-        - source: "CustomerID"
-          target: "customer_id"
-        - source: "Amount"
-          target: "total_value"
-        - source: "usuario.email"
-          target: "email_masked"
+      addresses: ["http://elasticsearch:9200"]
+      index: "orders"
+      username: ""
+      password: ""
